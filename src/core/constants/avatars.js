@@ -9,7 +9,7 @@ export const getAvatars = noUsers => {
 
   if (noUsers > names.length) {
     const diff = noUsers - names.length;
-    const getNames = sliceName(diff);
+    const getNames = sliceName(diff).reverse();
     avatars.push(...names);
     avatars.push(...getNames);
   } else avatars.push(sliceName(noUsers));

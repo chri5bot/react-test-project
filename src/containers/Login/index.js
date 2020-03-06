@@ -6,6 +6,7 @@ import {
   useAuth,
   useLoggedIn,
   getAvatars,
+  hasLength,
   CircularLoader
 } from "../../core";
 
@@ -39,7 +40,7 @@ const Login = () => {
   const setUsers =
     users && users.map((user, i) => ({ ...user, avatar: avatars[i] }));
 
-  if (!users || !setUsers) return <CircularLoader />;
+  if (!hasLength(users) || !hasLength(setUsers)) return <CircularLoader />;
 
   return (
     <div
@@ -54,7 +55,7 @@ const Login = () => {
         Selecciona un usuario
       </h2>
       <Grid style={{ margin: 0 }} columns={3} centered>
-        {setUsers &&
+        {hasLength(setUsers) &&
           setUsers.map(user => (
             <Grid.Column
               style={{

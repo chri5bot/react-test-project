@@ -13,7 +13,14 @@ import {
 } from "semantic-ui-react";
 import PropTypes from "prop-types";
 
-import { useAuth, placeParams, ROOT_ROUTE, USER_PROFILE_ROUTE } from "../..";
+import {
+  useAuth,
+  placeParams,
+  ROOT_ROUTE,
+  ALBUMS_ROUTE,
+  POSTS_ROUTE,
+  USER_PROFILE_ROUTE
+} from "../..";
 
 const getWidth = () =>
   typeof window === "undefined"
@@ -46,14 +53,16 @@ const HeaderDesktop = ({
               Home
             </Menu.Item>
             <Menu.Item
-              as="a"
+              as={Link}
+              to={ALBUMS_ROUTE}
               active={active === 1}
               onClick={handleSetActive(1)}
             >
               Albums
             </Menu.Item>
             <Menu.Item
-              as="a"
+              as={Link}
+              to={POSTS_ROUTE}
               active={active === 2}
               onClick={handleSetActive(2)}
             >
@@ -141,10 +150,20 @@ const HeaderMobile = ({
         >
           Home
         </Menu.Item>
-        <Menu.Item as="a" active={active === 1} onClick={handleSetActive(1)}>
+        <Menu.Item
+          as={Link}
+          to={ALBUMS_ROUTE}
+          active={active === 1}
+          onClick={handleSetActive(1)}
+        >
           Albums
         </Menu.Item>
-        <Menu.Item as="a" active={active === 2} onClick={handleSetActive(2)}>
+        <Menu.Item
+          as={Link}
+          to={POSTS_ROUTE}
+          active={active === 2}
+          onClick={handleSetActive(2)}
+        >
           Posts
         </Menu.Item>
       </Sidebar>
