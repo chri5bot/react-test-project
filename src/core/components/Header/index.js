@@ -20,7 +20,13 @@ const getWidth = () =>
     ? Responsive.onlyTablet.minWidth
     : window.innerWidth;
 
-const HeaderDesktop = ({ user, userSignOut, handleSelectUser }) => (
+const HeaderDesktop = ({
+  active,
+  handleSetActive,
+  user,
+  userSignOut,
+  handleSelectUser
+}) => (
   <Responsive getWidth={getWidth} minWidth={Responsive.onlyTablet.minWidth}>
     <Visibility once={false}>
       <Segment
@@ -31,11 +37,28 @@ const HeaderDesktop = ({ user, userSignOut, handleSelectUser }) => (
       >
         <Menu inverted pointing secondary size="large">
           <Container>
-            <Menu.Item as={Link} to={ROOT_ROUTE} active>
+            <Menu.Item
+              as={Link}
+              to={ROOT_ROUTE}
+              active={active === 0}
+              onClick={handleSetActive(0)}
+            >
               Home
             </Menu.Item>
-            <Menu.Item as="a">Albums</Menu.Item>
-            <Menu.Item as="a">Posts</Menu.Item>
+            <Menu.Item
+              as="a"
+              active={active === 1}
+              onClick={handleSetActive(1)}
+            >
+              Albums
+            </Menu.Item>
+            <Menu.Item
+              as="a"
+              active={active === 2}
+              onClick={handleSetActive(2)}
+            >
+              Posts
+            </Menu.Item>
             {user && (
               <Menu.Item
                 style={{
@@ -86,7 +109,13 @@ HeaderDesktop.defaultProps = {
   user: null
 };
 
-const HeaderMobile = ({ user, userSignOut, handleSelectUser }) => {
+const HeaderMobile = ({
+  active,
+  handleSetActive,
+  user,
+  userSignOut,
+  handleSelectUser
+}) => {
   const [sidebarOpened, setSidebarOpened] = useState(false);
   const toggleSidebarOpen = useCallback(() => setSidebarOpened(val => val), []);
 
@@ -104,11 +133,20 @@ const HeaderMobile = ({ user, userSignOut, handleSelectUser }) => {
         visible={sidebarOpened}
         vertical
       >
-        <Menu.Item as={Link} to={ROOT_ROUTE} active>
+        <Menu.Item
+          as={Link}
+          to={ROOT_ROUTE}
+          active={active === 0}
+          onClick={handleSetActive(0)}
+        >
           Home
         </Menu.Item>
-        <Menu.Item as="a">Albums</Menu.Item>
-        <Menu.Item as="a">Posts</Menu.Item>
+        <Menu.Item as="a" active={active === 1} onClick={handleSetActive(1)}>
+          Albums
+        </Menu.Item>
+        <Menu.Item as="a" active={active === 2} onClick={handleSetActive(2)}>
+          Posts
+        </Menu.Item>
       </Sidebar>
 
       <Sidebar.Pusher dimmed={sidebarOpened}>
@@ -171,21 +209,30 @@ HeaderMobile.defaultProps = {
 };
 
 const AppHeader = () => {
+  const [active, setActive] = useState(0);
   const history = useHistory();
   const {
     state: { user },
     userSignOut
   } = useAuth();
 
-  const handleSelectUser = useCallback(
-    () => history.push(placeParams(USER_PROFILE_ROUTE, { userId: user.id })),
-    [history, user]
-  );
+  const handleSetActive = useCallback(index => () => setActive(index), []);
+
+  const handleSelectUser = useCallback(() => {
+    history.push(
+      placeParams(USER_PROFILE_ROUTE, {
+        username: user.username.toLowerCase()
+      })
+    );
+    setActive(-1);
+  }, [history, user]);
 
   const headerProps = {
     user,
     userSignOut,
-    handleSelectUser
+    handleSelectUser,
+    active,
+    handleSetActive
   };
 
   return (
