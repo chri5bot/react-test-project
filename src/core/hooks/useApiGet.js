@@ -16,7 +16,7 @@ export const useApiGet = query => {
         .then(res => res && setData(res.data))
         .catch(err => console.error(err));
     } catch (error) {
-      if (axios.isCancel(error)) console.log("cancelled");
+      if (axios.isCancel(error)) console.error("cancelled");
       else throw error;
     }
 

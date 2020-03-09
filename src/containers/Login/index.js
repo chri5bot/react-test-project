@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { Grid, Image, Button } from "semantic-ui-react";
+import { Container, Header, Dropdown } from "semantic-ui-react";
 
 import {
   useApiGet,
@@ -38,12 +38,23 @@ const Login = () => {
   const avatars = users && getAvatars(users.length);
 
   const setUsers =
-    users && users.map((user, i) => ({ ...user, avatar: avatars[i] }));
+    users &&
+    users.map((user, i) => ({
+      ...user,
+      key: user.id,
+      text: user.name,
+      value: user.name,
+      image: {
+        avatar: true,
+        src: avatars[i]
+      },
+      avatar: avatars[i]
+    }));
 
   if (!hasLength(users) || !hasLength(setUsers)) return <CircularLoader />;
 
   return (
-    <div
+    <Container
       style={{
         minHeight: "75vh",
         display: "flex",
@@ -51,38 +62,29 @@ const Login = () => {
         justifyContent: "center"
       }}
     >
-      <h2 style={{ padding: "3rem", textAlign: "center" }}>
-        Selecciona un usuario
-      </h2>
-      <Grid style={{ margin: 0 }} columns={3} centered>
-        {hasLength(setUsers) &&
-          setUsers.map(user => (
-            <Grid.Column
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                padding: "2rem"
-              }}
-              key={user.id}
-            >
-              <Button
-                style={{
-                  display: "flex",
-                  alignItems: "center"
-                }}
-                onClick={handleLogin(user)}
-              >
-                <Image
-                  avatar
-                  style={{ height: "3rem", width: "3rem", marginRight: "1rem" }}
-                  src={user.avatar}
-                />
-                {user.name}
-              </Button>
-            </Grid.Column>
+      <Header as="h2" style={{ padding: "3rem", textAlign: "center" }}>
+        Select a user
+      </Header>
+      <Dropdown
+        text="Select user"
+        icon="user"
+        className="icon"
+        floating
+        labeled
+        button
+        style={{ width: 250, alignSelf: "center" }}
+      >
+        <Dropdown.Menu>
+          {setUsers.map(user => (
+            <Dropdown.Item
+              key={user.value}
+              onClick={handleLogin(user)}
+              {...user}
+            />
           ))}
-      </Grid>
-    </div>
+        </Dropdown.Menu>
+      </Dropdown>
+    </Container>
   );
 };
 

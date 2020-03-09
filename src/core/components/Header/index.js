@@ -13,19 +13,26 @@ import {
 } from "semantic-ui-react";
 import PropTypes from "prop-types";
 
-import {
-  useAuth,
-  placeParams,
-  ROOT_ROUTE,
-  ALBUMS_ROUTE,
-  POSTS_ROUTE,
-  USER_PROFILE_ROUTE
-} from "../..";
+import { useAuth, placeParams, USER_PROFILE_ROUTE } from "../..";
+import { menuItems } from "../../constants";
 
 const getWidth = () =>
   typeof window === "undefined"
     ? Responsive.onlyTablet.minWidth
     : window.innerWidth;
+
+const MenuItems = ({ active, handleSetActive }) =>
+  menuItems.map(({ id, title, route }, i) => (
+    <Menu.Item
+      key={id}
+      as={Link}
+      to={route}
+      active={active === i}
+      onClick={handleSetActive(i)}
+    >
+      {title}
+    </Menu.Item>
+  ));
 
 const HeaderDesktop = ({
   active,
@@ -44,30 +51,7 @@ const HeaderDesktop = ({
       >
         <Menu inverted pointing secondary size="large">
           <Container>
-            <Menu.Item
-              as={Link}
-              to={ROOT_ROUTE}
-              active={active === 0}
-              onClick={handleSetActive(0)}
-            >
-              Home
-            </Menu.Item>
-            <Menu.Item
-              as={Link}
-              to={ALBUMS_ROUTE}
-              active={active === 1}
-              onClick={handleSetActive(1)}
-            >
-              Albums
-            </Menu.Item>
-            <Menu.Item
-              as={Link}
-              to={POSTS_ROUTE}
-              active={active === 2}
-              onClick={handleSetActive(2)}
-            >
-              Posts
-            </Menu.Item>
+            <MenuItems active={active} handleSetActive={handleSetActive} />
             {user && (
               <Menu.Item
                 style={{
@@ -120,101 +104,99 @@ HeaderDesktop.defaultProps = {
 
 const HeaderMobile = ({
   active,
-  handleSetActive,
   user,
   userSignOut,
-  handleSelectUser
+  handleSelectUser,
+  handleSetResponsiveActive
 }) => {
   const [sidebarOpened, setSidebarOpened] = useState(false);
-  const toggleSidebarOpen = useCallback(() => setSidebarOpened(val => val), []);
+  const handleShowSidebar = useCallback(() => setSidebarOpened(true), []);
+  const handleHideSidebar = useCallback(() => setSidebarOpened(false), []);
+
+  const handleChangeView = useCallback(
+    index => () => {
+      handleHideSidebar();
+      handleSetResponsiveActive(index);
+    },
+    [handleHideSidebar, handleSetResponsiveActive]
+  );
 
   return (
-    <Responsive
-      as={Sidebar.Pushable}
-      getWidth={getWidth}
-      maxWidth={Responsive.onlyMobile.maxWidth}
-    >
+    <Responsive getWidth={getWidth} maxWidth={Responsive.onlyMobile.maxWidth}>
       <Sidebar
         as={Menu}
         animation="push"
         inverted
-        onHide={toggleSidebarOpen}
+        onHide={handleHideSidebar}
         visible={sidebarOpened}
         vertical
+        style={{
+          display: "flex",
+          alignItems: "strech",
+          position: "absolute",
+          top: 99
+        }}
       >
-        <Menu.Item
-          as={Link}
-          to={ROOT_ROUTE}
-          active={active === 0}
-          onClick={handleSetActive(0)}
+        <MenuItems active={active} handleSetActive={handleChangeView} />
+        <Button
+          as="a"
+          inverted
+          primary
+          style={{ margin: "1.5em" }}
+          onClick={userSignOut}
         >
-          Home
-        </Menu.Item>
-        <Menu.Item
-          as={Link}
-          to={ALBUMS_ROUTE}
-          active={active === 1}
-          onClick={handleSetActive(1)}
-        >
-          Albums
-        </Menu.Item>
-        <Menu.Item
-          as={Link}
-          to={POSTS_ROUTE}
-          active={active === 2}
-          onClick={handleSetActive(2)}
-        >
-          Posts
-        </Menu.Item>
+          Log out
+        </Button>
       </Sidebar>
 
-      <Sidebar.Pusher dimmed={sidebarOpened}>
-        <Segment
+      <Segment
+        inverted
+        textAlign="center"
+        style={{ minHeight: 50, padding: "1em 0em" }}
+        vertical
+      >
+        <Menu
           inverted
-          textAlign="center"
-          style={{ minHeight: 50, padding: "1em 0em" }}
-          vertical
+          pointing
+          secondary
+          size="large"
+          style={{ display: "flex", alignItems: "center" }}
         >
-          <Container>
-            <Menu inverted pointing secondary size="large">
-              <Menu.Item onClick={toggleSidebarOpen}>
-                <Icon name="sidebar" />
-              </Menu.Item>
-              {user && (
-                <Menu.Item
-                  style={{ display: "flex", justifyContent: "center" }}
-                  position="right"
-                >
-                  <div
-                    style={{ margin: "0 1rem", cursor: "pointer" }}
-                    onClick={handleSelectUser}
-                  >
-                    <Image
-                      avatar
-                      style={{
-                        height: "3rem",
-                        width: "3rem",
-                        marginRight: "1rem"
-                      }}
-                      src={user.avatar}
-                    />
-                    {user.name}
-                  </div>
-                  <Button
-                    as="a"
-                    inverted
-                    primary
-                    style={{ marginLeft: "0.5em" }}
-                    onClick={userSignOut}
-                  >
-                    Log out
-                  </Button>
-                </Menu.Item>
-              )}
-            </Menu>
-          </Container>
-        </Segment>
-      </Sidebar.Pusher>
+          <Menu.Item
+            style={{
+              padding: 0,
+              margin: 0,
+              marginLeft: "2rem",
+              alignSelf: "center"
+            }}
+            onClick={handleShowSidebar}
+          >
+            <Icon name="sidebar" />
+          </Menu.Item>
+          {user && (
+            <Menu.Item
+              style={{ display: "flex", justifyContent: "center" }}
+              position="right"
+            >
+              <Container
+                style={{ margin: "0 1rem", cursor: "pointer" }}
+                onClick={handleSelectUser}
+              >
+                <Image
+                  avatar
+                  style={{
+                    height: "3rem",
+                    width: "3rem",
+                    marginRight: "1rem"
+                  }}
+                  src={user.avatar}
+                />
+                {user.name}
+              </Container>
+            </Menu.Item>
+          )}
+        </Menu>
+      </Segment>
     </Responsive>
   );
 };
@@ -236,6 +218,7 @@ const AppHeader = () => {
   } = useAuth();
 
   const handleSetActive = useCallback(index => () => setActive(index), []);
+  const handleSetResponsiveActive = useCallback(index => setActive(index), []);
 
   const handleSelectUser = useCallback(() => {
     history.push(
@@ -257,7 +240,10 @@ const AppHeader = () => {
   return (
     <>
       <HeaderDesktop {...headerProps} />
-      <HeaderMobile {...headerProps} />
+      <HeaderMobile
+        {...headerProps}
+        handleSetResponsiveActive={handleSetResponsiveActive}
+      />
     </>
   );
 };

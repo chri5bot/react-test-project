@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { Header, Image, Table } from "semantic-ui-react";
+import { Container, Header, Image, Table } from "semantic-ui-react";
 import axios from "axios";
 
 import {
@@ -56,14 +56,16 @@ const Albums = () => {
   if (!hasLength(albums) && !hasLength(photoAlbums)) return <CircularLoader />;
 
   return (
-    <div
+    <Container
       style={{
         minHeight: "75vh",
         display: "flex",
         flexDirection: "column"
       }}
     >
-      <h2 style={{ padding: "3rem", textAlign: "center" }}>Select a album</h2>
+      <Header as="h2" style={{ padding: "3rem", textAlign: "center" }}>
+        Select a album
+      </Header>
       <Table
         basic="very"
         celled
@@ -106,7 +108,7 @@ const Albums = () => {
             ))}
         </Table.Body>
       </Table>
-    </div>
+    </Container>
   );
 };
 

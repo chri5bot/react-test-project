@@ -10,6 +10,10 @@ export const useLoggedIn = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
+    window.scroll({ top: 0 });
+  }, []);
+
+  useEffect(() => {
     if (!isAuth && pathname !== LOGIN_ROUTE) history.push(LOGIN_ROUTE);
     if (isAuth && pathname === LOGIN_ROUTE) history.push(ROOT_ROUTE);
   }, [pathname, isAuth, history]);

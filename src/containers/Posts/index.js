@@ -1,23 +1,29 @@
 import React, { useState, useCallback, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import { Container, Header, Segment, Image } from "semantic-ui-react";
 import axios from "axios";
-import { Segment, Image } from "semantic-ui-react";
 
 import {
   useAuth,
   useApiGet,
   useLoggedIn,
   hasLength,
+  useMedia,
   UNSPLASH_API,
   UNSPLASH_KEY_API,
+  USER_POST_ROUTE,
+  placeParams,
   CircularLoader
 } from "../../core";
 
 const Posts = () => {
   const [posts, setPosts] = useState([]);
+  const history = useHistory();
   const {
     state: { user }
   } = useAuth();
   const getPosts = useApiGet(!user ? "posts" : `posts?userId=${user.id}`);
+  const isMobile = useMedia(767);
 
   const handleSetPosts = useCallback(
     async () =>
@@ -25,7 +31,7 @@ const Posts = () => {
         `${UNSPLASH_API}?orientation=landscape&count=${getPosts.length}&client_id=${UNSPLASH_KEY_API}`
       )
         .then(res => {
-          const getImages = res.data.map(({ urls }) => urls.small);
+          const getImages = res.data.map(({ urls }) => urls);
           const postsWithImage = getPosts.map((post, i) => ({
             ...post,
             image: getImages[i]
@@ -37,6 +43,15 @@ const Posts = () => {
     [getPosts, setPosts]
   );
 
+  const handleSelectPost = useCallback(
+    (postId, postImage) => () =>
+      history.push({
+        pathname: placeParams(USER_POST_ROUTE, { postId }),
+        state: { postImage }
+      }),
+    [history]
+  );
+
   useLoggedIn();
 
   useEffect(() => {
@@ -45,11 +60,8 @@ const Posts = () => {
 
   if (!hasLength(posts)) return <CircularLoader />;
 
-  console.log("posts: ", posts);
-  console.log("posts body length: ", posts[9].body.length);
-
   return (
-    <div
+    <Container
       style={{
         minHeight: "75vh",
         display: "flex",
@@ -57,20 +69,24 @@ const Posts = () => {
         marginBottom: "2rem"
       }}
     >
-      <h2 style={{ padding: "3rem", textAlign: "center" }}>Your posts</h2>
+      <Header as="h2" style={{ padding: "3rem", textAlign: "center" }}>
+        Your posts
+      </Header>
       {hasLength(posts) &&
-        posts.map(({ id, title, body, image }) => (
+        posts.map(({ id, title, body, image: { small, regular } }) => (
           <Segment
             key={id}
+            onClick={handleSelectPost(id, regular)}
             style={{
               maxWidth: "820px",
               display: "flex",
+              flexDirection: isMobile ? "column-reverse" : "row",
               justifyContent: "space-between",
               margin: "1rem auto",
               cursor: "pointer"
             }}
           >
-            <div
+            <Container
               style={{
                 display: "flex",
                 flexDirection: "column",
@@ -78,15 +94,25 @@ const Posts = () => {
                 marginRight: "2rem"
               }}
             >
-              <h3 style={{ textTransform: "capitalize" }}>{title}</h3>
+              <Header as="h3" style={{ textTransform: "capitalize" }}>
+                {title}
+              </Header>
               <p style={{ textTransform: "capitalize" }}>
                 {body.length > 100 ? `${body.slice(0, 100)}...` : body}
               </p>
-            </div>
-            <Image size="small" src={image} />
+            </Container>
+            <Image
+              style={
+                isMobile
+                  ? { marginBottom: "1rem" }
+                  : { width: 200, marginLeft: "0.5em" }
+              }
+              fluid={isMobile}
+              src={small}
+            />
           </Segment>
         ))}
-    </div>
+    </Container>
   );
 };
 

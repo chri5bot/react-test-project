@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, Header, Image, Segment } from "semantic-ui-react";
+import { Container, Grid, Header, Image, Segment } from "semantic-ui-react";
 
 import { useLoggedIn, useAuth, CircularLoader } from "../../core";
 import UserAccordion from "../../components/UserAccordion";
@@ -26,7 +26,7 @@ const UserProfile = () => {
   } = user;
 
   return (
-    <div
+    <Container
       style={{
         minHeight: "75vh",
         display: "flex",
@@ -61,7 +61,7 @@ const UserProfile = () => {
         company={company}
       />
       <UserMap coords={address.geo} />
-    </div>
+    </Container>
   );
 };
 
