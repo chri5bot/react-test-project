@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { Form } from "semantic-ui-react";
+import PropTypes from "prop-types";
 
 import { apiCreate, useMedia } from "../../core";
 
@@ -56,6 +57,11 @@ const AddTask = ({ userId, tasks, setTasks }) => {
       </Form.Group>
     </Form>
   );
+};
+AddTask.propTypes = {
+  userId: PropTypes.number.isRequired,
+  tasks: PropTypes.array.isRequired,
+  setTasks: PropTypes.func.isRequired
 };
 
 export default AddTask;

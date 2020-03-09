@@ -1,11 +1,16 @@
 import React, { useState, useCallback } from "react";
 import { Accordion, Menu } from "semantic-ui-react";
+import PropTypes from "prop-types";
 
 const AccordionInfo = ({ title, value }) => (
   <p>
     <b style={{ textTransform: "uppercase" }}>{title}:</b> {value}
   </p>
 );
+AccordionInfo.propTypes = {
+  title: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired
+};
 
 const UserAccordion = ({ personalInfo, address, company }) => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -83,6 +88,16 @@ const UserAccordion = ({ personalInfo, address, company }) => {
       </Menu.Item>
     </Accordion>
   );
+};
+UserAccordion.propTypes = {
+  personalInfo: PropTypes.object,
+  address: PropTypes.object,
+  company: PropTypes.object
+};
+UserAccordion.defaultProps = {
+  personalInfo: {},
+  address: {},
+  company: {}
 };
 
 export default UserAccordion;

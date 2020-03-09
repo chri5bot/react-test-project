@@ -1,5 +1,6 @@
 import React from "react";
 import { Image, Modal } from "semantic-ui-react";
+import PropTypes from "prop-types";
 
 const PhotoModal = ({ open, onClose, photo }) =>
   photo && (
@@ -14,5 +15,14 @@ const PhotoModal = ({ open, onClose, photo }) =>
       </Modal.Content>
     </Modal>
   );
+PhotoModal.propTypes = {
+  open: PropTypes.bool,
+  onClose: PropTypes.func.isRequired,
+  photo: PropTypes.object
+};
+PhotoModal.defaultProps = {
+  open: false,
+  photo: {}
+};
 
 export default PhotoModal;

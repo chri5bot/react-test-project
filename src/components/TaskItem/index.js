@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { Checkbox } from "semantic-ui-react";
+import PropTypes from "prop-types";
 
 import { apiUpdate } from "../../core";
 
@@ -23,6 +24,14 @@ const TaskItem = ({ query, isChecked, title }) => {
       label={title}
     />
   );
+};
+TaskItem.propTypes = {
+  query: PropTypes.string.isRequired,
+  isChecked: PropTypes.bool,
+  title: PropTypes.string.isRequired
+};
+TaskItem.defaultProps = {
+  isChecked: false
 };
 
 export default TaskItem;

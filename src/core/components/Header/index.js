@@ -33,6 +33,13 @@ const MenuItems = ({ active, handleSetActive }) =>
       {title}
     </Menu.Item>
   ));
+MenuItems.propTypes = {
+  active: PropTypes.number,
+  handleSetActive: PropTypes.func.isRequired
+};
+MenuItems.defaultProps = {
+  active: 0
+};
 
 const HeaderDesktop = ({
   active,
@@ -96,10 +103,13 @@ const HeaderDesktop = ({
 HeaderDesktop.propTypes = {
   user: PropTypes.object,
   userSignOut: PropTypes.func.isRequired,
-  handleSelectUser: PropTypes.func.isRequired
+  handleSelectUser: PropTypes.func.isRequired,
+  active: PropTypes.number,
+  handleSetActive: PropTypes.func.isRequired
 };
 HeaderDesktop.defaultProps = {
-  user: null
+  user: null,
+  active: 0
 };
 
 const HeaderMobile = ({
@@ -203,10 +213,13 @@ const HeaderMobile = ({
 HeaderMobile.propTypes = {
   user: PropTypes.object,
   userSignOut: PropTypes.func.isRequired,
-  handleSelectUser: PropTypes.func.isRequired
+  handleSelectUser: PropTypes.func.isRequired,
+  active: PropTypes.number,
+  handleSetResponsiveActive: PropTypes.func.isRequired
 };
 HeaderMobile.defaultProps = {
-  user: null
+  user: null,
+  active: 0
 };
 
 const AppHeader = () => {

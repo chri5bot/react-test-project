@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { Segment, Container, Icon } from "semantic-ui-react";
+import PropTypes from "prop-types";
 
 import { apiGetData, hasLength, CircularLoader } from "../../core";
 
@@ -29,6 +30,9 @@ const PostComments = ({ postId }) => {
       >{`${name} ${body}.`}</p>
     </Segment>
   ));
+};
+PostComments.propTypes = {
+  postId: PropTypes.string.isRequired
 };
 
 export default PostComments;

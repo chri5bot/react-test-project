@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ReactMapGL, { Marker } from "react-map-gl";
 import { Icon } from "semantic-ui-react";
+import PropTypes from "prop-types";
 
 const UserMap = ({ coords: { lat, lng } }) => {
   const latitude = parseInt(lat, 10);
@@ -26,6 +27,12 @@ const UserMap = ({ coords: { lat, lng } }) => {
       </Marker>
     </ReactMapGL>
   );
+};
+UserMap.propTypes = {
+  coords: PropTypes.shape({
+    lat: PropTypes.string,
+    lng: PropTypes.string
+  }).isRequired
 };
 
 export default UserMap;
