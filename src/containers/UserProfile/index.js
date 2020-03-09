@@ -53,7 +53,7 @@ const UserProfile = () => {
       </Segment>
       <UserAccordion
         personalInfo={{
-          email,
+          email: email.toLowerCase(),
           phone,
           website
         }}

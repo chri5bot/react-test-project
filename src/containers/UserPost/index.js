@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams, useLocation } from "react-router-dom";
-import { Container, Header, Image, Form } from "semantic-ui-react";
+import { Container, Header, Image } from "semantic-ui-react";
 
 import {
   useAuth,
@@ -32,7 +32,7 @@ const UserPost = () => {
 
   const { title, body } = getPost[0];
   const setBody = [body, ...loremIpsum];
-  const postStyle = { margin: "2rem 1rem" };
+  const postStyle = { margin: "1rem" };
 
   return (
     <Container
@@ -61,18 +61,6 @@ const UserPost = () => {
       ))}
       <Header as="h3">Comments:</Header>
       <PostComments postId={postId} />
-      <Form>
-        <Form.Group style={{ flexDirection: "column" }}>
-          <Form.Input placeholder="New Comment" />
-          <Form.Button
-            style={{
-              float: "right",
-              margin: "1rem 0"
-            }}
-            content="Add Comment"
-          />
-        </Form.Group>
-      </Form>
     </Container>
   );
 };

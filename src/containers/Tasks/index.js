@@ -6,8 +6,7 @@ import {
   apiDelete,
   useAuth,
   useLoggedIn,
-  hasLength,
-  CircularLoader
+  hasLength
 } from "../../core";
 import AddTask from "../../components/AddTask";
 import TaskItem from "../../components/TaskItem";
@@ -26,15 +25,17 @@ const Tasks = () => {
   }, [user]);
 
   const handleDeleteTask = useCallback(
-    taskId => async () => apiDelete(`todos?userId=${user.id}&id=${taskId}`),
-    [user]
+    taskId => async () => {
+      const newTasks = tasks.filter(({ id }) => id !== taskId);
+      setTasks(newTasks);
+      apiDelete(`todos?userId=${user.id}&id=${taskId}`);
+    },
+    [tasks, user]
   );
 
   useEffect(() => {
     handleGetData();
   }, [handleGetData]);
-
-  if (!hasLength(tasks)) return <CircularLoader />;
 
   return (
     <Container
@@ -53,7 +54,7 @@ const Tasks = () => {
         tasks.map(({ id, title, completed }) => (
           <Segment key={id} style={{ display: "flex" }}>
             <TaskItem
-              query={`todos?userId=${user.id}&id=${id}`}
+              query={user && `todos?userId=${user.id}&id=${id}`}
               isChecked={completed}
               title={title}
             />

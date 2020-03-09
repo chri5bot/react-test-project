@@ -24,6 +24,7 @@ const AddTask = ({ userId, tasks, setTasks }) => {
       completed: false
     };
 
+    setText("");
     apiCreate("todos", newTask);
     setTasks(val => [newTask, ...val]);
   }, [setTasks, tasks, userId, text]);
@@ -59,9 +60,12 @@ const AddTask = ({ userId, tasks, setTasks }) => {
   );
 };
 AddTask.propTypes = {
-  userId: PropTypes.number.isRequired,
+  userId: PropTypes.number,
   tasks: PropTypes.array.isRequired,
   setTasks: PropTypes.func.isRequired
+};
+AddTask.defaultProps = {
+  userId: null
 };
 
 export default AddTask;

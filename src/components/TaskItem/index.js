@@ -17,6 +17,7 @@ const TaskItem = ({ query, isChecked, title }) => {
       style={{
         height: "100%",
         width: "100%",
+        textDecoration: checked ? "line-through" : "none",
         textTransform: "capitalize"
       }}
       onChange={toggleIsChecked}
